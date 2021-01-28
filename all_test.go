@@ -78,11 +78,11 @@ var (
 	goos      = env("TARGET_GOOS", runtime.GOOS)
 	goarch    = env("TARGET_GOARCH", runtime.GOARCH)
 	supported = map[supportedKey]struct{}{
-		//TODO {"darwin", "amd64"}: {},
-		{"linux", "386"}:   {},
-		{"linux", "amd64"}: {},
-		{"linux", "arm"}:   {},
-		{"linux", "arm64"}: {},
+		{"darwin", "amd64"}: {},
+		{"linux", "386"}:    {},
+		{"linux", "amd64"}:  {},
+		{"linux", "arm"}:    {},
+		{"linux", "arm64"}:  {},
 		//TODO {"windows", "386"}:   {},
 		//TODO {"windows", "amd64"}: {},
 	}
@@ -262,7 +262,8 @@ func TestGenerate(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		defer os.RemoveAll(tmpDir)
+		fmt.Println(tmpDir)
+		//defer os.RemoveAll(tmpDir)
 	}
 
 	f, err := os.Open(tarFn)
@@ -271,6 +272,21 @@ func TestGenerate(t *testing.T) {
 	}
 
 	defer f.Close()
+
+	if err := inDir(tmpDir, func() error {
+		os.RemoveAll(tarVer)
+		if err := untar("", bufio.NewReader(f)); err != nil {
+			t.Fatal(err)
+		}
+
+		if err := os.Chdir(tarVer); err != nil {
+			t.Fatal(err)
+		}
+
+		return nil
+	}); err != nil {
+		t.Fatal(err)
+	}
 
 	cdb := filepath.Join(tmpDir, "cdb.json")
 	switch {
@@ -286,15 +302,6 @@ func TestGenerate(t *testing.T) {
 		}
 	default:
 		if err := inDir(tmpDir, func() error {
-			os.RemoveAll(tarVer)
-			if err := untar("", bufio.NewReader(f)); err != nil {
-				t.Fatal(err)
-			}
-
-			if err := os.Chdir(tarVer); err != nil {
-				t.Fatal(err)
-			}
-
 			if _, err := shell("./configure", "--static", "--64"); err != nil {
 				t.Fatal(err)
 			}
@@ -307,7 +314,6 @@ func TestGenerate(t *testing.T) {
 		}); err != nil {
 			t.Fatal(err)
 		}
-
 	}
 	mustCC(t, os.Stdout, os.Stderr,
 		"-export-defines", "",
