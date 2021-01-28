@@ -79,10 +79,10 @@ var (
 	goarch    = env("TARGET_GOARCH", runtime.GOARCH)
 	supported = map[supportedKey]struct{}{
 		//TODO {"darwin", "amd64"}: {},
-		{"linux", "386"}:    {},
-		{"linux", "amd64"}:  {},
-		{"linux", "arm"}:    {},
-		{"linux", "arm64"}:  {},
+		{"linux", "386"}:   {},
+		{"linux", "amd64"}: {},
+		{"linux", "arm"}:   {},
+		{"linux", "arm64"}: {},
 		//TODO {"windows", "386"}:   {},
 		//TODO {"windows", "amd64"}: {},
 	}
@@ -273,29 +273,42 @@ func TestGenerate(t *testing.T) {
 	defer f.Close()
 
 	cdb := filepath.Join(tmpDir, "cdb.json")
-	if err := inDir(tmpDir, func() error {
-		os.RemoveAll(tarVer)
-		if err := untar("", bufio.NewReader(f)); err != nil {
+	switch {
+	case goos == "darwin" && goarch == "amd64":
+		b, err := ioutil.ReadFile("lib/posix.json")
+		if err != nil {
 			t.Fatal(err)
 		}
 
-		if err := os.Chdir(tarVer); err != nil {
+		b = bytes.ReplaceAll(b, []byte("$TMP"), []byte(tmpDir))
+		if err := ioutil.WriteFile(cdb, b, 0660); err != nil {
+			t.Fatal(err)
+		}
+	default:
+		if err := inDir(tmpDir, func() error {
+			os.RemoveAll(tarVer)
+			if err := untar("", bufio.NewReader(f)); err != nil {
+				t.Fatal(err)
+			}
+
+			if err := os.Chdir(tarVer); err != nil {
+				t.Fatal(err)
+			}
+
+			if _, err := shell("./configure", "--static", "--64"); err != nil {
+				t.Fatal(err)
+			}
+
+			if _, err := shell("ccgo", "-compiledb", cdb, "make", "test64"); err != nil {
+				t.Fatal(err)
+			}
+
+			return nil
+		}); err != nil {
 			t.Fatal(err)
 		}
 
-		if _, err := shell("./configure", "--static", "--64"); err != nil {
-			t.Fatal(err)
-		}
-
-		if _, err := shell("ccgo", "-compiledb", cdb, "make", "test64"); err != nil {
-			t.Fatal(err)
-		}
-
-		return nil
-	}); err != nil {
-		t.Fatal(err)
 	}
-
 	mustCC(t, os.Stdout, os.Stderr,
 		"-export-defines", "",
 		"-export-enums", "",

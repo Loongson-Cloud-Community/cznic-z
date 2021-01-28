@@ -1,0 +1,336 @@
+[
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-I.",
+            "-D_FILE_OFFSET_BITS=64",
+            "-c",
+            "-o",
+            "example64.o",
+            "test/example.c"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "test/example.c",
+        "output": "example64.o"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-c",
+            "-o",
+            "adler32.o",
+            "adler32.c"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "adler32.c",
+        "output": "adler32.o"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-c",
+            "-o",
+            "crc32.o",
+            "crc32.c"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "crc32.c",
+        "output": "crc32.o"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-c",
+            "-o",
+            "deflate.o",
+            "deflate.c"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "deflate.c",
+        "output": "deflate.o"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-c",
+            "-o",
+            "infback.o",
+            "infback.c"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "infback.c",
+        "output": "infback.o"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-c",
+            "-o",
+            "inffast.o",
+            "inffast.c"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "inffast.c",
+        "output": "inffast.o"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-c",
+            "-o",
+            "inflate.o",
+            "inflate.c"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "inflate.c",
+        "output": "inflate.o"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-c",
+            "-o",
+            "inftrees.o",
+            "inftrees.c"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "inftrees.c",
+        "output": "inftrees.o"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-c",
+            "-o",
+            "trees.o",
+            "trees.c"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "trees.c",
+        "output": "trees.o"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-c",
+            "-o",
+            "zutil.o",
+            "zutil.c"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "zutil.c",
+        "output": "zutil.o"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-c",
+            "-o",
+            "compress.o",
+            "compress.c"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "compress.c",
+        "output": "compress.o"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-c",
+            "-o",
+            "uncompr.o",
+            "uncompr.c"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "uncompr.c",
+        "output": "uncompr.o"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-c",
+            "-o",
+            "gzclose.o",
+            "gzclose.c"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "gzclose.c",
+        "output": "gzclose.o"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-c",
+            "-o",
+            "gzlib.o",
+            "gzlib.c"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "gzlib.c",
+        "output": "gzlib.o"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-c",
+            "-o",
+            "gzread.o",
+            "gzread.c"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "gzread.c",
+        "output": "gzread.o"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-c",
+            "-o",
+            "gzwrite.o",
+            "gzwrite.c"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "gzwrite.c",
+        "output": "gzwrite.o"
+    },
+    {
+        "arguments": [
+            "ar",
+            "rc",
+            "libz.a",
+            "adler32.o",
+            "crc32.o",
+            "deflate.o",
+            "infback.o",
+            "inffast.o",
+            "inflate.o",
+            "inftrees.o",
+            "trees.o",
+            "zutil.o",
+            "compress.o",
+            "uncompr.o",
+            "gzclose.o",
+            "gzlib.o",
+            "gzread.o",
+            "gzwrite.o"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": ""
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-o",
+            "example64",
+            "example64.o",
+            "-L.",
+            "libz.a"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "",
+        "output": "example64"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-I.",
+            "-D_FILE_OFFSET_BITS=64",
+            "-c",
+            "-o",
+            "minigzip64.o",
+            "test/minigzip.c"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "test/minigzip.c",
+        "output": "minigzip64.o"
+    },
+    {
+        "arguments": [
+            "gcc",
+            "-O3",
+            "-m64",
+            "-D_LARGEFILE64_SOURCE=1",
+            "-DHAVE_HIDDEN",
+            "-o",
+            "minigzip64",
+            "minigzip64.o",
+            "-L.",
+            "libz.a"
+        ],
+        "directory": "$TMP/zlib-1.2.11",
+        "file": "",
+        "output": "minigzip64"
+    }
+]
