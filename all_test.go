@@ -262,8 +262,7 @@ func TestGenerate(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		fmt.Println(tmpDir)
-		//defer os.RemoveAll(tmpDir)
+		defer os.RemoveAll(tmpDir)
 	}
 
 	f, err := os.Open(tarFn)
@@ -276,10 +275,6 @@ func TestGenerate(t *testing.T) {
 	if err := inDir(tmpDir, func() error {
 		os.RemoveAll(tarVer)
 		if err := untar("", bufio.NewReader(f)); err != nil {
-			t.Fatal(err)
-		}
-
-		if err := os.Chdir(tarVer); err != nil {
 			t.Fatal(err)
 		}
 
@@ -301,7 +296,7 @@ func TestGenerate(t *testing.T) {
 			t.Fatal(err)
 		}
 	default:
-		if err := inDir(tmpDir, func() error {
+		if err := inDir(filepath.Join(tmpDir, tarVer), func() error {
 			if _, err := shell("./configure", "--static", "--64"); err != nil {
 				t.Fatal(err)
 			}
