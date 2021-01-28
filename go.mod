@@ -7,5 +7,5 @@ require (
 	golang.org/x/sys v0.0.0-20210124154548-22da62e12c0c // indirect
 	golang.org/x/tools v0.1.0 // indirect
 	modernc.org/ccgo/v3 v3.8.10-0.20210128112411-49f3f924dbc8
-	modernc.org/libc v0.0.0-20210128111918-ca6f6f7ddd9c
+	modernc.org/libc v0.0.0-20210128193039-fb43d5d24bfb
 )

@@ -49,6 +49,8 @@ modernc.org/ccgo/v3 v3.8.10-0.20210128112411-49f3f924dbc8 h1:m3beKYPRZI/Ea5wuneP
 modernc.org/ccgo/v3 v3.8.10-0.20210128112411-49f3f924dbc8/go.mod h1:LhUFX0vaD9CGl2Z1+OIys7ZYRLguxiIfqZwe3bgntZU=
 modernc.org/libc v0.0.0-20210128111918-ca6f6f7ddd9c h1:EKySXbnZpzL8quM3Lpav5wK7HDuOWvDCi2JM0/kF7sw=
 modernc.org/libc v0.0.0-20210128111918-ca6f6f7ddd9c/go.mod h1:U1eq8YWr/Kc1RWCMFUWEdkTg8OTcfLw2kY8EDwl039w=
+modernc.org/libc v0.0.0-20210128193039-fb43d5d24bfb h1:n/L3nF5xTtnLITskWz8oT2MWKM/bKMzFgKP4EnnMaks=
+modernc.org/libc v0.0.0-20210128193039-fb43d5d24bfb/go.mod h1:U1eq8YWr/Kc1RWCMFUWEdkTg8OTcfLw2kY8EDwl039w=
 modernc.org/mathutil v1.1.1/go.mod h1:mZW8CKdRPY1v87qxC/wUdX5O1qDzXMP5TH3wjfpga6E=
 modernc.org/mathutil v1.2.2 h1:+yFk8hBprV+4c0U9GjFtL+dV3N8hOJ8JCituQcMShFY=
 modernc.org/mathutil v1.2.2/go.mod h1:mZW8CKdRPY1v87qxC/wUdX5O1qDzXMP5TH3wjfpga6E=
