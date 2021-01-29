@@ -5,13 +5,9 @@
 package z // import "modernc.org/z"
 
 import (
-	"archive/tar"
-	"bufio"
 	"bytes"
-	"compress/gzip"
 	"flag"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -21,8 +17,6 @@ import (
 	"runtime/debug"
 	"strings"
 	"testing"
-
-	"modernc.org/ccgo/v3/lib"
 )
 
 func caller(s string, va ...interface{}) {
@@ -70,125 +64,37 @@ const (
 	tarVer = "zlib-1.2.11"
 )
 
-type supportedKey = struct{ os, arch string }
-
-var (
-	oGenerate = flag.Bool("generate", false, "")
-
-	goos      = env("TARGET_GOOS", runtime.GOOS)
-	goarch    = env("TARGET_GOARCH", runtime.GOARCH)
-	supported = map[supportedKey]struct{}{
-		{"darwin", "amd64"}: {},
-		{"linux", "386"}:    {},
-		{"linux", "amd64"}:  {},
-		{"linux", "arm"}:    {},
-		{"linux", "arm64"}:  {},
-		//TODO {"windows", "386"}:   {},
-		//TODO {"windows", "amd64"}: {},
-	}
-	tmpDir = os.Getenv("GO_GENERATE_TMPDIR")
-)
-
-func env(key, dflt string) string {
-	if s := os.Getenv(key); s != "" {
-		return s
-	}
-
-	return dflt
-}
-
 func TestMain(m *testing.M) {
 	flag.Parse()
 	rc := m.Run()
 	os.Exit(rc)
 }
 
-func mkdir(paths ...string) error {
-	for _, path := range paths {
-		path = filepath.FromSlash(path)
-		if err := os.MkdirAll(path, 0770); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func inDir(dir string, f func() error) (err error) {
-	var cwd string
-	if cwd, err = os.Getwd(); err != nil {
-		return err
-	}
-
-	defer func() {
-		if err2 := os.Chdir(cwd); err2 != nil {
-			err = err2
-		}
-	}()
-
-	if err = os.Chdir(dir); err != nil {
-		return err
-	}
-
-	return f()
-}
-
-func untar(root string, r io.Reader) error {
-	gr, err := gzip.NewReader(r)
+func Test(t *testing.T) {
+	tmpDir, err := ioutil.TempDir("", "go-test-zlib-")
 	if err != nil {
-		return err
+		t.Fatal(err)
 	}
 
-	tr := tar.NewReader(gr)
-	for {
-		hdr, err := tr.Next()
-		if err != nil {
-			if err != io.EOF {
-				return err
-			}
+	defer os.RemoveAll(tmpDir)
 
-			return nil
+	wd, err := absCwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	goos := runtime.GOOS
+	goarch := runtime.GOARCH
+	mg := filepath.Join(wd, "internal", fmt.Sprintf("minigzip_%s_%s.go", goos, goarch))
+	ex := filepath.Join(wd, "internal", fmt.Sprintf("example_%s_%s.go", goos, goarch))
+	if err := inDir(tmpDir, func() error {
+		if out, err := shell("sh", "-c", fmt.Sprintf("echo hello world | go run %s | go run %[1]s -d && go run %s tmp", mg, ex)); err != nil {
+			return fmt.Errorf("%s\nFAIL: %v", out, err)
 		}
 
-		switch hdr.Typeflag {
-		case tar.TypeDir:
-			dir := filepath.Join(root, hdr.Name)
-			if err = os.MkdirAll(dir, 0770); err != nil {
-				return err
-			}
-		case tar.TypeSymlink, tar.TypeXGlobalHeader:
-			// skip
-		case tar.TypeReg, tar.TypeRegA:
-			dir := filepath.Dir(filepath.Join(root, hdr.Name))
-			if _, err := os.Stat(dir); err != nil {
-				if !os.IsNotExist(err) {
-					return err
-				}
-
-				if err = os.MkdirAll(dir, 0770); err != nil {
-					return err
-				}
-			}
-
-			f, err := os.OpenFile(filepath.Join(root, hdr.Name), os.O_CREATE|os.O_WRONLY, os.FileMode(hdr.Mode))
-			if err != nil {
-				return err
-			}
-
-			w := bufio.NewWriter(f)
-			if _, err = io.Copy(w, tr); err != nil {
-				return err
-			}
-
-			if err := w.Flush(); err != nil {
-				return err
-			}
-
-			if err := f.Close(); err != nil {
-				return err
-			}
-		default:
-			return fmt.Errorf("unexpected tar header typeflag %#02x", hdr.Typeflag)
-		}
+		return nil
+	}); err != nil {
+		t.Fatal(err)
 	}
 }
 
@@ -216,6 +122,25 @@ func shell(cmd string, args ...string) ([]byte, error) {
 	return b.w.Bytes(), err
 }
 
+func inDir(dir string, f func() error) (err error) {
+	var cwd string
+	if cwd, err = os.Getwd(); err != nil {
+		return err
+	}
+
+	defer func() {
+		if err2 := os.Chdir(cwd); err2 != nil {
+			err = err2
+		}
+	}()
+
+	if err = os.Chdir(dir); err != nil {
+		return err
+	}
+
+	return f()
+}
+
 func absCwd() (string, error) {
 	wd, err := os.Getwd()
 	if err != nil {
@@ -227,143 +152,4 @@ func absCwd() (string, error) {
 	}
 
 	return wd, nil
-}
-
-func cc(stdout, stderr io.Writer, args ...string) error {
-	return ccgo.NewTask(append([]string{"ccgo"}, args...), stdout, stderr).Main()
-}
-
-func mustCC(t *testing.T, stdout, stderr io.Writer, args ...string) {
-	if err := cc(stdout, stderr, args...); err != nil {
-		t.Fatal(err)
-	}
-}
-
-func TestGenerate(t *testing.T) {
-	if !*oGenerate {
-		t.Skip("not enabled")
-	}
-
-	if _, ok := supported[supportedKey{goos, goarch}]; !ok {
-		t.Fatalf("unknown/unsupported os/arch combination: %s/%s\n", goos, goarch)
-	}
-
-	if err := mkdir("lib"); err != nil {
-		t.Fatal(err)
-	}
-
-	if err := mkdir("internal"); err != nil {
-		t.Fatal(err)
-	}
-
-	if tmpDir == "" {
-		var err error
-		if tmpDir, err = ioutil.TempDir("", "go-generate-zlib-"); err != nil {
-			t.Fatal(err)
-		}
-
-		defer os.RemoveAll(tmpDir)
-	}
-
-	f, err := os.Open(tarFn)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	defer f.Close()
-
-	if err := inDir(tmpDir, func() error {
-		os.RemoveAll(tarVer)
-		if err := untar("", bufio.NewReader(f)); err != nil {
-			t.Fatal(err)
-		}
-
-		return nil
-	}); err != nil {
-		t.Fatal(err)
-	}
-
-	cdb := filepath.Join(tmpDir, "cdb.json")
-	switch {
-	case goos == "darwin" && goarch == "amd64":
-		b, err := ioutil.ReadFile("lib/posix.json")
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		b = bytes.ReplaceAll(b, []byte("$TMP"), []byte(tmpDir))
-		if err := ioutil.WriteFile(cdb, b, 0660); err != nil {
-			t.Fatal(err)
-		}
-	default:
-		if err := inDir(filepath.Join(tmpDir, tarVer), func() error {
-			if _, err := shell("./configure", "--static", "--64"); err != nil {
-				t.Fatal(err)
-			}
-
-			if _, err := shell("ccgo", "-compiledb", cdb, "make", "test64"); err != nil {
-				t.Fatal(err)
-			}
-
-			return nil
-		}); err != nil {
-			t.Fatal(err)
-		}
-	}
-	mustCC(t, os.Stdout, os.Stderr,
-		"-export-defines", "",
-		"-export-enums", "",
-		"-export-externs", "X",
-		"-export-fields", "F",
-		"-export-structs", "",
-		"-export-typedefs", "",
-		"-o", filepath.Join("lib", fmt.Sprintf("z_%s_%s.go", goos, goarch)),
-		"-pkgname", "z",
-		"-trace-translation-units",
-		cdb, "libz.a",
-	)
-	mustCC(t, os.Stdout, os.Stderr,
-		"-lmodernc.org/z/lib",
-		"-o", filepath.Join("internal", fmt.Sprintf("minigzip_%s_%s.go", goos, goarch)),
-		"-trace-translation-units",
-		cdb, "minigzip64",
-	)
-	mustCC(t, os.Stdout, os.Stderr,
-		"-lmodernc.org/z/lib",
-		"-o", filepath.Join("internal", fmt.Sprintf("example_%s_%s.go", goos, goarch)),
-		"-trace-translation-units",
-		cdb, "example64",
-	)
-}
-
-func Test(t *testing.T) {
-	if *oGenerate {
-		return
-	}
-
-	tmpDir, err := ioutil.TempDir("", "go-test-zlib-")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	defer os.RemoveAll(tmpDir)
-
-	wd, err := absCwd()
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	goos := runtime.GOOS
-	goarch := runtime.GOARCH
-	mg := filepath.Join(wd, "internal", fmt.Sprintf("minigzip_%s_%s.go", goos, goarch))
-	ex := filepath.Join(wd, "internal", fmt.Sprintf("example_%s_%s.go", goos, goarch))
-	if err := inDir(tmpDir, func() error {
-		if out, err := shell("sh", "-c", fmt.Sprintf("echo hello world | go run %s | go run %[1]s -d && go run %s tmp", mg, ex)); err != nil {
-			return fmt.Errorf("%s\nFAIL: %v", out, err)
-		}
-
-		return nil
-	}); err != nil {
-		t.Fatal(err)
-	}
 }
