@@ -88,8 +88,7 @@ func main() {
 			fatal(err)
 		}
 
-		fmt.Println(tmpDir)
-		//TODO defer os.RemoveAll(tmpDir)
+		defer os.RemoveAll(tmpDir)
 	}
 
 	f, err := os.Open(tarFn)
