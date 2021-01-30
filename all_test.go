@@ -59,11 +59,6 @@ func init() {
 
 // ----------------------------------------------------------------------------
 
-const (
-	tarFn  = tarVer + ".tar.gz"
-	tarVer = "zlib-1.2.11"
-)
-
 func TestMain(m *testing.M) {
 	flag.Parse()
 	rc := m.Run()
