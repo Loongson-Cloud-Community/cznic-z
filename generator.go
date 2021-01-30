@@ -29,8 +29,8 @@ const (
 type supportedKey = struct{ os, arch string }
 
 var (
-	goos      = env("TARGET_GOOS", runtime.GOOS)
-	goarch    = env("TARGET_GOARCH", runtime.GOARCH)
+	goos      = runtime.GOOS
+	goarch    = runtime.GOARCH
 	supported = map[supportedKey]struct{}{
 		{"darwin", "amd64"}: {},
 		{"linux", "386"}:    {},
@@ -111,7 +111,7 @@ func main() {
 
 	cdb := filepath.Join(tmpDir, "cdb.json")
 	if err := inDir(filepath.Join(tmpDir, tarVer), func() error {
-		if _, err := shell("./configure", "--static", "--64"); err != nil {
+		if _, err := shell("./configure", "--static"); err != nil {
 			fatal(err)
 		}
 
