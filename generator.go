@@ -33,6 +33,7 @@ var (
 	goarch    = runtime.GOARCH
 	supported = map[supportedKey]struct{}{
 		{"darwin", "amd64"}: {},
+		{"darwin", "arm64"}: {},
 		{"linux", "386"}:    {},
 		{"linux", "amd64"}:  {},
 		{"linux", "arm"}:    {},
