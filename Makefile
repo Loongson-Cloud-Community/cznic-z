@@ -27,7 +27,7 @@ all:
 # generate on current host
 generate:
 	go generate 2>&1 | tee log-generate
-	gofmt -l -s -w *.go 2>&1 | tee -a log-generate
+	gofmt -l -s -w . 2>&1 | tee -a log-generate
 
 build_all_targets:
 	GOOS=darwin GOARCH=amd64 go build -v ./...
@@ -48,22 +48,22 @@ darwin_amd64:
 darwin_arm64:
 	make generate
 
-# any linux host with cross gcc installed
+# on linux/amd4
 linux_amd64:
 	TARGET_GOOS=linux TARGET_GOARCH=amd64 make generate
 	GOOS=linux GOARCH=amd64 go build -v
 
-# any linux host with cross gcc installed
+# on linux/amd4
 linux_386:
 	CCGO_CPP=i686-linux-gnu-cpp GO_GENERATE_CC=i686-linux-gnu-gcc TARGET_GOOS=linux TARGET_GOARCH=386 make generate
 	GOOS=linux GOARCH=386 go build -v
 
-# any linux host with cross gcc installed
+# on linux/amd4
 linux_arm:
 	CCGO_CPP=arm-linux-gnueabi-cpp-8 GO_GENERATE_CC=arm-linux-gnueabi-gcc-8 TARGET_GOOS=linux TARGET_GOARCH=arm make generate
 	GOOS=linux GOARCH=arm go build -v
 
-# any linux host with cross gcc installed
+# on linux/amd4
 linux_arm64:
 	CCGO_CPP=aarch64-linux-gnu-cpp-8 GO_GENERATE_CC=aarch64-linux-gnu-gcc-8 TARGET_GOOS=linux TARGET_GOARCH=arm64 make generate
 	GOOS=linux GOARCH=arm64 go build -v

@@ -86,7 +86,30 @@ func main() {
 	}
 	switch goos {
 	case "windows":
-		panic("TODO")
+		ccgo.MustCompile(true,
+			"-export-defines", "",
+			"-export-enums", "",
+			"-export-externs", "X",
+			"-export-fields", "F",
+			"-export-structs", "",
+			"-export-typedefs", "",
+			"-o", filepath.Join("lib", fmt.Sprintf("z_%s_%s.go", goos, goarch)),
+			"-pkgname", "z",
+			"-trace-translation-units",
+			cdb, "libz.a",
+		)
+		ccgo.MustCompile(true,
+			"-lmodernc.org/z/lib",
+			"-o", filepath.Join("internal", fmt.Sprintf("minigzip_%s_%s.go", goos, goarch)),
+			"-trace-translation-units",
+			cdb, "minigzip.exe",
+		)
+		ccgo.MustCompile(true,
+			"-lmodernc.org/z/lib",
+			"-o", filepath.Join("internal", fmt.Sprintf("example_%s_%s.go", goos, goarch)),
+			"-trace-translation-units",
+			cdb, "example.exe",
+		)
 	case "darwin", "linux":
 		ccgo.MustCompile(true,
 			"-export-defines", "",

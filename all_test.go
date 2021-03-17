@@ -82,14 +82,27 @@ func Test(t *testing.T) {
 	goarch := runtime.GOARCH
 	mg := filepath.Join(wd, "internal", fmt.Sprintf("minigzip_%s_%s.go", goos, goarch))
 	ex := filepath.Join(wd, "internal", fmt.Sprintf("example_%s_%s.go", goos, goarch))
-	if err := inDir(tmpDir, func() error {
-		if out, err := shell("sh", "-c", fmt.Sprintf("echo hello world | go run %s | go run %[1]s -d && go run %s tmp", mg, ex)); err != nil {
-			return fmt.Errorf("%s\nFAIL: %v", out, err)
-		}
+	switch goos {
+	case "windows":
+		if err := inDir(tmpDir, func() error {
+			if out, err := shell("cmd.exe", "/c", fmt.Sprintf("echo hello world | go run %s | go run %[1]s -d", mg, ex)); err != nil {
+				return fmt.Errorf("%s\nFAIL: %v", out, err)
+			}
 
-		return nil
-	}); err != nil {
-		t.Fatal(err)
+			return nil
+		}); err != nil {
+			t.Fatal(err)
+		}
+	default:
+		if err := inDir(tmpDir, func() error {
+			if out, err := shell("sh", "-c", fmt.Sprintf("echo hello world | go run %s | go run %[1]s -d && go run %s tmp", mg, ex)); err != nil {
+				return fmt.Errorf("%s\nFAIL: %v", out, err)
+			}
+
+			return nil
+		}); err != nil {
+			t.Fatal(err)
+		}
 	}
 }
 
