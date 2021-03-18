@@ -5,18 +5,18 @@
 package z // import "modernc.org/z"
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/exec"
 	"path"
 	"path/filepath"
 	"runtime"
 	"runtime/debug"
 	"strings"
 	"testing"
+
+	"modernc.org/ccgo/v3/lib"
 )
 
 func caller(s string, va ...interface{}) {
@@ -73,7 +73,7 @@ func Test(t *testing.T) {
 
 	defer os.RemoveAll(tmpDir)
 
-	wd, err := absCwd()
+	wd, err := ccgo.AbsCwd()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -82,82 +82,48 @@ func Test(t *testing.T) {
 	goarch := runtime.GOARCH
 	mg := filepath.Join(wd, "internal", fmt.Sprintf("minigzip_%s_%s.go", goos, goarch))
 	ex := filepath.Join(wd, "internal", fmt.Sprintf("example_%s_%s.go", goos, goarch))
-	switch goos {
-	case "windows":
-		if err := inDir(tmpDir, func() error {
-			if out, err := shell("cmd.exe", "/c", fmt.Sprintf("echo hello world | go run %s | go run %[1]s -d", mg, ex)); err != nil {
-				return fmt.Errorf("%s\nFAIL: %v", out, err)
+	mgBin := "minigzip"
+	exBin := "example"
+	if goos == "windows" {
+		mgBin += ".exe"
+		exBin += ".exe"
+	}
+	if ccgo.Shell("go", "build", "-o", filepath.Join(tmpDir, mgBin), mg); err != nil {
+		t.Fatal(err)
+	}
+
+	if ccgo.Shell("go", "build", "-o", filepath.Join(tmpDir, exBin), ex); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := ccgo.InDir(tmpDir, func() error {
+		switch goos {
+		case "windows":
+			if err := ccgo.InDir(tmpDir, func() error {
+				if out, err := ccgo.Shell("cmd.exe", "/c", fmt.Sprintf("echo hello world | %s | %[1]s -d", mgBin, exBin)); err != nil {
+					return fmt.Errorf("%s\nFAIL: %v", out, err)
+				}
+
+				return nil
+			}); err != nil {
+				t.Fatal(err)
 			}
+		default:
+			if err := ccgo.InDir(tmpDir, func() error {
+				mgBin = "./" + mgBin
+				exBin = "./" + exBin
+				if out, err := ccgo.Shell("sh", "-c", fmt.Sprintf("echo hello world | %s | %[1]s -d && %s tmp", mgBin, exBin)); err != nil {
+					return fmt.Errorf("%s\nFAIL: %v", out, err)
+				}
 
-			return nil
-		}); err != nil {
-			t.Fatal(err)
-		}
-	default:
-		if err := inDir(tmpDir, func() error {
-			if out, err := shell("sh", "-c", fmt.Sprintf("echo hello world | go run %s | go run %[1]s -d && go run %s tmp", mg, ex)); err != nil {
-				return fmt.Errorf("%s\nFAIL: %v", out, err)
+				return nil
+			}); err != nil {
+				t.Fatal(err)
 			}
-
-			return nil
-		}); err != nil {
-			t.Fatal(err)
 		}
+
+		return nil
+	}); err != nil {
+		t.Fatal(err)
 	}
-}
-
-type echoWriter struct {
-	w bytes.Buffer
-}
-
-func (w *echoWriter) Write(b []byte) (int, error) {
-	os.Stdout.Write(b)
-	return w.w.Write(b)
-}
-
-func shell(cmd string, args ...string) ([]byte, error) {
-	wd, err := absCwd()
-	if err != nil {
-		return nil, err
-	}
-
-	fmt.Printf("execute %s %q in %s\n", cmd, args, wd)
-	var b echoWriter
-	c := exec.Command(cmd, args...)
-	c.Stdout = &b
-	c.Stderr = &b
-	err = c.Run()
-	return b.w.Bytes(), err
-}
-
-func inDir(dir string, f func() error) (err error) {
-	var cwd string
-	if cwd, err = os.Getwd(); err != nil {
-		return err
-	}
-
-	defer func() {
-		if err2 := os.Chdir(cwd); err2 != nil {
-			err = err2
-		}
-	}()
-
-	if err = os.Chdir(dir); err != nil {
-		return err
-	}
-
-	return f()
-}
-
-func absCwd() (string, error) {
-	wd, err := os.Getwd()
-	if err != nil {
-		return "", err
-	}
-
-	if wd, err = filepath.Abs(wd); err != nil {
-		return "", err
-	}
-
-	return wd, nil
 }
