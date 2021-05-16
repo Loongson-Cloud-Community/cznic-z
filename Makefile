@@ -44,6 +44,10 @@ build_all_targets:
 darwin_amd64:
 	make generate
 
+# only on s390x
+linux_s390x:
+	make generate
+
 # only on darwin host
 darwin_arm64:
 	make generate

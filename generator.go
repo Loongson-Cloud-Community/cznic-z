@@ -35,6 +35,7 @@ var (
 		{"linux", "amd64"}:   {},
 		{"linux", "arm"}:     {},
 		{"linux", "arm64"}:   {},
+		{"linux", "s390x"}:   {},
 		{"windows", "386"}:   {},
 		{"windows", "amd64"}: {},
 	}
