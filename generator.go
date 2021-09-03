@@ -2,6 +2,7 @@
 // Use of the source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build ignore
 // +build ignore
 
 package main
@@ -31,6 +32,7 @@ var (
 	supported = map[supportedKey]struct{}{
 		{"darwin", "amd64"}:  {},
 		{"darwin", "arm64"}:  {},
+		{"freebsd", "amd64"}: {},
 		{"linux", "386"}:     {},
 		{"linux", "amd64"}:   {},
 		{"linux", "arm"}:     {},
@@ -78,7 +80,7 @@ func main() {
 			switch goos {
 			case "windows":
 				ccgo.MustShell(true, "ccgo", "-compiledb", cdb, "make", "-fwin32/Makefile.gcc", "example.exe", "minigzip.exe")
-			case "darwin", "linux":
+			case "darwin", "linux", "freebsd":
 				ccgo.MustShell(true, "./configure", "--static")
 				ccgo.MustShell(true, "ccgo", "-compiledb", cdb, "make", "test64")
 			}
@@ -111,7 +113,7 @@ func main() {
 			"-trace-translation-units",
 			cdb, "example.exe",
 		)
-	case "darwin", "linux":
+	case "darwin", "linux", "freebsd":
 		ccgo.MustCompile(true,
 			"-export-defines", "",
 			"-export-enums", "",
