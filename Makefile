@@ -37,6 +37,7 @@ build_all_targets:
 	GOOS=linux GOARCH=amd64 go build -v
 	GOOS=linux GOARCH=arm go build -v
 	GOOS=linux GOARCH=arm64 go build -v
+	GOOS=netbsd GOARCH=arm64 go build -v
 	GOOS=windows GOARCH=386 go build -v
 	GOOS=windows GOARCH=amd64 go build -v
 	echo done
@@ -44,46 +45,57 @@ build_all_targets:
 # only on darwin host
 darwin_amd64:
 	make generate
+	go test -v
 
 # only on s390x
 linux_s390x:
 	make generate
+	go test -v
 
 # only on darwin host
 darwin_arm64:
 	make generate
+	go test -v
 
 # only on freebsd host
 freebsd_amd64:
 	AR=/usr/bin/ar make generate
+	go test -v
+
+# only on netbsd host
+netbsd_amd64:
+	AR=/usr/bin/ar make generate
+	go test -v
 
 # on linux/amd64
 linux_amd64:
 	TARGET_GOOS=linux TARGET_GOARCH=amd64 make generate
-	GOOS=linux GOARCH=amd64 go build -v
+	GOOS=linux GOARCH=amd64 go test -v
 
 # on linux/amd64
 linux_386:
 	CCGO_CPP=i686-linux-gnu-cpp GO_GENERATE_CC=i686-linux-gnu-gcc TARGET_GOOS=linux TARGET_GOARCH=386 make generate
-	GOOS=linux GOARCH=386 go build -v
+	GOOS=linux GOARCH=386 go test -v
 
 # on linux/amd64
 linux_arm:
 	CCGO_CPP=arm-linux-gnueabi-cpp-8 GO_GENERATE_CC=arm-linux-gnueabi-gcc-8 TARGET_GOOS=linux TARGET_GOARCH=arm make generate
-	GOOS=linux GOARCH=arm go build -v
+	GOOS=linux GOARCH=arm go test -v
 
 # on linux/amd64
 linux_arm64:
 	CCGO_CPP=aarch64-linux-gnu-cpp-8 GO_GENERATE_CC=aarch64-linux-gnu-gcc-8 TARGET_GOOS=linux TARGET_GOARCH=arm64 make generate
-	GOOS=linux GOARCH=arm64 go build -v
+	GOOS=linux GOARCH=arm64 go test -v
 
 # only on windows host with mingw gcc installed
 windows_amd64:
 	make generate
+	go test -v
 
 # only on windows host with mingw gcc installed
 windows_386:
 	make generate
+	go test -v
 
 devbench:
 	date 2>&1 | tee log-devbench

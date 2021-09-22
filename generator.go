@@ -38,6 +38,7 @@ var (
 		{"linux", "arm"}:     {},
 		{"linux", "arm64"}:   {},
 		{"linux", "s390x"}:   {},
+		{"netbsd", "amd64"}:  {},
 		{"windows", "386"}:   {},
 		{"windows", "amd64"}: {},
 	}
@@ -80,7 +81,7 @@ func main() {
 			switch goos {
 			case "windows":
 				ccgo.MustShell(true, "ccgo", "-compiledb", cdb, "make", "-fwin32/Makefile.gcc", "example.exe", "minigzip.exe")
-			case "darwin", "linux", "freebsd":
+			case "darwin", "linux", "freebsd", "netbsd":
 				ccgo.MustShell(true, "./configure", "--static")
 				ccgo.MustShell(true, "ccgo", "-compiledb", cdb, "make", "test64")
 			}
@@ -113,7 +114,7 @@ func main() {
 			"-trace-translation-units",
 			cdb, "example.exe",
 		)
-	case "darwin", "linux", "freebsd":
+	case "darwin", "linux", "freebsd", "netbsd":
 		ccgo.MustCompile(true,
 			"-export-defines", "",
 			"-export-enums", "",
