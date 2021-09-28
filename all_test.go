@@ -59,6 +59,10 @@ func init() {
 
 // ----------------------------------------------------------------------------
 
+var (
+	xtags = flag.String("xtags", "non.existent.tag", "")
+)
+
 func TestMain(m *testing.M) {
 	flag.Parse()
 	rc := m.Run()
@@ -88,11 +92,11 @@ func Test(t *testing.T) {
 		mgBin += ".exe"
 		exBin += ".exe"
 	}
-	if ccgo.Shell("go", "build", "-o", filepath.Join(tmpDir, mgBin), mg); err != nil {
+	if ccgo.Shell("go", "build", "-tags", *xtags, "-o", filepath.Join(tmpDir, mgBin), mg); err != nil {
 		t.Fatal(err)
 	}
 
-	if ccgo.Shell("go", "build", "-o", filepath.Join(tmpDir, exBin), ex); err != nil {
+	if ccgo.Shell("go", "build", "-tags", *xtags, "-o", filepath.Join(tmpDir, exBin), ex); err != nil {
 		t.Fatal(err)
 	}
 

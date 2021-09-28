@@ -37,6 +37,7 @@ build_all_targets:
 	GOOS=linux GOARCH=amd64 go build -v
 	GOOS=linux GOARCH=arm go build -v
 	GOOS=linux GOARCH=arm64 go build -v
+	GOOS=linux GOARCH=s390x go build -v
 	GOOS=netbsd GOARCH=arm64 go build -v
 	GOOS=windows GOARCH=386 go build -v
 	GOOS=windows GOARCH=amd64 go build -v
