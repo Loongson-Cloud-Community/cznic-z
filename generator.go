@@ -80,17 +80,17 @@ func main() {
 		ccgo.MustInDir(true, srcDir, func() error {
 			switch goos {
 			case "windows":
-				ccgo.MustShell(true, "ccgo", "-compiledb", cdb, "make", "-fwin32/Makefile.gcc", "example.exe", "minigzip.exe")
+				ccgo.MustRun(true, "-compiledb", cdb, "make", "-fwin32/Makefile.gcc", "example.exe", "minigzip.exe")
 			case "darwin", "linux", "freebsd", "netbsd":
 				ccgo.MustShell(true, "./configure", "--static")
-				ccgo.MustShell(true, "ccgo", "-compiledb", cdb, "make", "test64")
+				ccgo.MustRun(true, "-compiledb", cdb, "make", "test64")
 			}
 			return nil
 		})
 	}
 	switch goos {
 	case "windows":
-		ccgo.MustCompile(true,
+		ccgo.MustRun(true,
 			"-export-defines", "",
 			"-export-enums", "",
 			"-export-externs", "X",
@@ -102,20 +102,20 @@ func main() {
 			"-trace-translation-units",
 			cdb, "libz.a",
 		)
-		ccgo.MustCompile(true,
+		ccgo.MustRun(true,
 			"-lmodernc.org/z/lib",
 			"-o", filepath.Join("internal", fmt.Sprintf("minigzip_%s_%s.go", goos, goarch)),
 			"-trace-translation-units",
 			cdb, "minigzip.exe",
 		)
-		ccgo.MustCompile(true,
+		ccgo.MustRun(true,
 			"-lmodernc.org/z/lib",
 			"-o", filepath.Join("internal", fmt.Sprintf("example_%s_%s.go", goos, goarch)),
 			"-trace-translation-units",
 			cdb, "example.exe",
 		)
 	case "darwin", "linux", "freebsd", "netbsd":
-		ccgo.MustCompile(true,
+		ccgo.MustRun(true,
 			"-export-defines", "",
 			"-export-enums", "",
 			"-export-externs", "X",
@@ -127,13 +127,13 @@ func main() {
 			"-trace-translation-units",
 			cdb, "libz.a",
 		)
-		ccgo.MustCompile(true,
+		ccgo.MustRun(true,
 			"-lmodernc.org/z/lib",
 			"-o", filepath.Join("internal", fmt.Sprintf("minigzip_%s_%s.go", goos, goarch)),
 			"-trace-translation-units",
 			cdb, "minigzip64",
 		)
-		ccgo.MustCompile(true,
+		ccgo.MustRun(true,
 			"-lmodernc.org/z/lib",
 			"-o", filepath.Join("internal", fmt.Sprintf("example_%s_%s.go", goos, goarch)),
 			"-trace-translation-units",
