@@ -80,12 +80,12 @@ linux_386:
 
 # on linux/amd64
 linux_arm:
-	CCGO_CPP=arm-linux-gnueabi-cpp-8 GO_GENERATE_CC=arm-linux-gnueabi-gcc-8 TARGET_GOOS=linux TARGET_GOARCH=arm make generate
+	CCGO_CPP=arm-linux-gnueabi-cpp GO_GENERATE_CC=arm-linux-gnueabi-gcc TARGET_GOOS=linux TARGET_GOARCH=arm make generate
 	GOOS=linux GOARCH=arm go test -v
 
 # on linux/amd64
 linux_arm64:
-	CCGO_CPP=aarch64-linux-gnu-cpp-8 GO_GENERATE_CC=aarch64-linux-gnu-gcc-8 TARGET_GOOS=linux TARGET_GOARCH=arm64 make generate
+	CCGO_CPP=aarch64-linux-gnu-cpp GO_GENERATE_CC=aarch64-linux-gnu-gcc TARGET_GOOS=linux TARGET_GOARCH=arm64 make generate
 	GOOS=linux GOARCH=arm64 go test -v
 
 # only on windows host with mingw gcc installed
