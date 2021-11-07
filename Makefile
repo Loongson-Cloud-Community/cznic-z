@@ -28,6 +28,7 @@ all:
 generate:
 	go generate 2>&1 | tee log-generate
 	gofmt -l -s -w . 2>&1 | tee -a log-generate
+	go build -v
 
 build_all_targets:
 	GOOS=darwin GOARCH=amd64 go build -v
@@ -60,7 +61,8 @@ darwin_arm64:
 
 # only on freebsd host
 freebsd_amd64:
-	AR=/usr/bin/ar make generate
+	@echo "Should be executed only on freebsd/amd64."
+	AR=$$(which ar) make generate
 	go test -v
 
 # only on netbsd host

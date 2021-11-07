@@ -1,8 +1,8 @@
 module modernc.org/z
 
-go 1.15
+go 1.16
 
 require (
-	modernc.org/ccgo/v3 v3.12.53
-	modernc.org/libc v1.11.51
+	modernc.org/ccgo/v3 v3.12.56
+	modernc.org/libc v1.11.55
 )

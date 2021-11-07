@@ -46,6 +46,7 @@ var (
 )
 
 func main() {
+	fmt.Printf("Running on %s/%s.\n", runtime.GOOS, runtime.GOARCH)
 	if _, ok := supported[supportedKey{goos, goarch}]; !ok {
 		ccgo.Fatalf(true, "unsupported target: %s/%s", goos, goarch)
 	}
@@ -77,13 +78,17 @@ func main() {
 			ccgo.Fatal(true, err)
 		}
 
+		make := "make"
 		ccgo.MustInDir(true, srcDir, func() error {
 			switch goos {
 			case "windows":
 				ccgo.MustRun(true, "-compiledb", cdb, "make", "-fwin32/Makefile.gcc", "example.exe", "minigzip.exe")
-			case "darwin", "linux", "freebsd", "netbsd":
+			case "darwin", "freebsd", "netbsd":
+				make = "gmake"
+				fallthrough
+			case "linux":
 				ccgo.MustShell(true, "./configure", "--static")
-				ccgo.MustRun(true, "-compiledb", cdb, "make", "test64")
+				ccgo.MustRun(true, "-compiledb", cdb, make, "test64")
 			}
 			return nil
 		})
