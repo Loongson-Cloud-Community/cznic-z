@@ -67,7 +67,8 @@ freebsd_amd64:
 
 # only on netbsd host
 netbsd_amd64:
-	AR=/usr/bin/ar make generate
+	@echo "Should be executed only on netbsd/amd64."
+	AR=$$(which ar) make generate
 	go test -v
 
 # on linux/amd64
