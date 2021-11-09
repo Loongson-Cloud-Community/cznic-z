@@ -51,12 +51,14 @@ darwin_amd64:
 
 # only on s390x
 linux_s390x:
-	make generate
+	@echo "Should be executed only on darwin/amd64."
+	AR=$$(which ar) make generate
 	go test -v
 
 # only on darwin host
 darwin_arm64:
-	make generate
+	@echo "Should be executed only on darwin/arm64."
+	AR=$$(which ar) make generate
 	go test -v
 
 # only on freebsd host
