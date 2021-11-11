@@ -95,6 +95,7 @@ linux_arm64:
 
 # only on windows host with mingw gcc installed
 windows_amd64:
+	@echo "Should be executed only on windows/amd64."
 	make generate
 	go test -v
 
