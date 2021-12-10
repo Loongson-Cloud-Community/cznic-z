@@ -27,7 +27,6 @@ all:
 # generate on current host
 generate:
 	go generate 2>&1 | tee log-generate
-	gofmt -l -s -w . 2>&1 | tee -a log-generate
 	go build -v
 
 build_all_targets:
