@@ -33,6 +33,7 @@ build_all_targets:
 	GOOS=darwin GOARCH=amd64 go build -v
 	GOOS=darwin GOARCH=arm64 go build -v
 	GOOS=freebsd GOARCH=arm64 go build -v
+	GOOS=freebsd GOARCH=386 go build -v
 	GOOS=linux GOARCH=386 go build -v
 	GOOS=linux GOARCH=amd64 go build -v
 	GOOS=linux GOARCH=arm go build -v
@@ -63,6 +64,12 @@ darwin_arm64:
 # only on freebsd host
 freebsd_amd64:
 	@echo "Should be executed only on freebsd/amd64."
+	AR=$$(which ar) make generate
+	go test -v
+
+# only on freebsd host
+freebsd_386:
+	@echo "Should be executed only on freebsd/386."
 	AR=$$(which ar) make generate
 	go test -v
 
