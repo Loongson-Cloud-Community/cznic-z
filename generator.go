@@ -26,20 +26,21 @@ const (
 type supportedKey = struct{ os, arch string }
 
 var (
-	gcc       = ccgo.Env("GO_GENERATE_CC", "gcc")
+	gcc       = ccgo.Env("GO_GENERATE_CC", ccgo.Env("CC", "gcc"))
 	goarch    = ccgo.Env("TARGET_GOARCH", runtime.GOARCH)
 	goos      = ccgo.Env("TARGET_GOOS", runtime.GOOS)
 	supported = map[supportedKey]struct{}{
 		{"darwin", "amd64"}:  {},
 		{"darwin", "arm64"}:  {},
-		{"freebsd", "amd64"}: {},
 		{"freebsd", "386"}:   {},
+		{"freebsd", "amd64"}: {},
 		{"linux", "386"}:     {},
 		{"linux", "amd64"}:   {},
 		{"linux", "arm"}:     {},
 		{"linux", "arm64"}:   {},
 		{"linux", "s390x"}:   {},
 		{"netbsd", "amd64"}:  {},
+		{"openbsd", "amd64"}: {},
 		{"windows", "386"}:   {},
 		{"windows", "amd64"}: {},
 	}
@@ -84,7 +85,7 @@ func main() {
 			switch goos {
 			case "windows":
 				ccgo.MustRun(true, "-compiledb", cdb, "make", "-fwin32/Makefile.gcc", "example.exe", "minigzip.exe")
-			case "darwin", "freebsd", "netbsd":
+			case "darwin", "freebsd", "netbsd", "openbsd":
 				make = "gmake"
 				fallthrough
 			case "linux":
@@ -120,7 +121,7 @@ func main() {
 			"-trace-translation-units",
 			cdb, "example.exe",
 		)
-	case "darwin", "linux", "freebsd", "netbsd":
+	case "darwin", "linux", "freebsd", "netbsd", "openbsd":
 		ccgo.MustRun(true,
 			"-export-defines", "",
 			"-export-enums", "",

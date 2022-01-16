@@ -32,14 +32,15 @@ generate:
 build_all_targets:
 	GOOS=darwin GOARCH=amd64 go build -v
 	GOOS=darwin GOARCH=arm64 go build -v
-	GOOS=freebsd GOARCH=arm64 go build -v
 	GOOS=freebsd GOARCH=386 go build -v
+	GOOS=freebsd GOARCH=arm64 go build -v
 	GOOS=linux GOARCH=386 go build -v
 	GOOS=linux GOARCH=amd64 go build -v
 	GOOS=linux GOARCH=arm go build -v
 	GOOS=linux GOARCH=arm64 go build -v
 	GOOS=linux GOARCH=s390x go build -v
 	GOOS=netbsd GOARCH=arm64 go build -v
+	GOOS=openbsd GOARCH=arm64 go build -v
 	GOOS=windows GOARCH=386 go build -v
 	GOOS=windows GOARCH=amd64 go build -v
 	echo done
@@ -98,6 +99,12 @@ linux_arm:
 linux_arm64:
 	CCGO_CPP=aarch64-linux-gnu-cpp GO_GENERATE_CC=aarch64-linux-gnu-gcc TARGET_GOOS=linux TARGET_GOARCH=arm64 make generate
 	GOOS=linux GOARCH=arm64 go test -v
+
+# only on openbsd host
+openbsd_amd64:
+	@echo "Should be executed only on openbsd/amd64."
+	CC=$$(which cc) AR=$$(which ar) make generate
+	go test -v
 
 # only on windows host with mingw gcc installed
 windows_amd64:
