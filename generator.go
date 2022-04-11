@@ -44,6 +44,7 @@ var (
 		{"openbsd", "amd64"}: {},
 		{"windows", "386"}:   {},
 		{"windows", "amd64"}: {},
+		{"windows", "arm64"}: {},
 	}
 	tmpDir = ccgo.Env("GO_GENERATE_TMPDIR", "")
 )

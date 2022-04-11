@@ -44,6 +44,7 @@ build_all_targets:
 	GOOS=openbsd GOARCH=arm64 go build -v
 	GOOS=windows GOARCH=386 go build -v
 	GOOS=windows GOARCH=amd64 go build -v
+	GOOS=windows GOARCH=arm64 go build -v
 	echo done
 
 # only on darwin host
@@ -116,6 +117,12 @@ openbsd_amd64:
 # only on windows host with mingw gcc installed
 windows_amd64:
 	@echo "Should be executed only on windows/amd64."
+	make generate
+	go test -v
+
+# only on windows host with mingw gcc installed
+windows_arm64:
+	@echo "Should be executed only on windows/arm64."
 	make generate
 	go test -v
 
