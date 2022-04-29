@@ -38,6 +38,7 @@ build_all_targets:
 	GOOS=linux GOARCH=amd64 go build -v
 	GOOS=linux GOARCH=arm go build -v
 	GOOS=linux GOARCH=arm64 go build -v
+	GOOS=linux GOARCH=ppc64le go build -v
 	GOOS=linux GOARCH=riscv64 go build -v
 	GOOS=linux GOARCH=s390x go build -v
 	GOOS=netbsd GOARCH=arm64 go build -v
@@ -105,6 +106,12 @@ linux_arm64:
 # only on linux/riscv64
 linux_riscv64:
 	@echo "Should be executed only on linux/riscv64."
+	make generate
+	go test -v
+
+# only on linux/ppc64le
+linux_ppc64le:
+	@echo "Should be executed only on linux/ppc64le."
 	make generate
 	go test -v
 

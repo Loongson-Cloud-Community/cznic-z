@@ -39,6 +39,7 @@ var (
 		{"linux", "arm"}:     {},
 		{"linux", "arm64"}:   {},
 		{"linux", "riscv64"}: {},
+		{"linux", "ppc64le"}: {},
 		{"linux", "s390x"}:   {},
 		{"netbsd", "amd64"}:  {},
 		{"openbsd", "amd64"}: {},
