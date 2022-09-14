@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	modernc.org/ccgo/v3 v3.0.0-20220910160915-348f15de615a
-	modernc.org/libc v1.18.0
+	modernc.org/libc v1.19.0
 )
 
 require (
@@ -19,7 +19,7 @@ require (
 	lukechampine.com/uint128 v1.1.1 // indirect
 	modernc.org/cc/v3 v3.38.1 // indirect
 	modernc.org/mathutil v1.5.0 // indirect
-	modernc.org/memory v1.3.0 // indirect
+	modernc.org/memory v1.4.0 // indirect
 	modernc.org/opt v0.1.3 // indirect
 	modernc.org/strutil v1.1.3 // indirect
 	modernc.org/token v1.0.1 // indirect
