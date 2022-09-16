@@ -129,6 +129,12 @@ openbsd_amd64:
 	CC=$$(which cc) AR=$$(which ar) make generate
 	go test -v
 
+# only on openbsd host
+openbsd_arm64:
+	@echo "Should be executed only on openbsd/arm64."
+	CC=$$(which cc) AR=$$(which ar) make generate
+	go test -v
+
 # only on windows host with mingw gcc installed
 windows_amd64:
 	@echo "Should be executed only on windows/amd64."

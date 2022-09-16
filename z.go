@@ -16,19 +16,19 @@
 //
 // Installation
 //
-// 	$ go get modernc.org/z
+//	$ go get modernc.org/z
 //
 // Linking using ccgo
 //
-// 	$ ccgo foo.c -lmodernc.org/z/lib
+//	$ ccgo foo.c -lmodernc.org/z/lib
 //
 // Documentation
 //
-// 	http://godoc.org/modernc.org/z
+//	http://godoc.org/modernc.org/z
 //
 // Builders
 //
-// 	https://modern-c.appspot.com/-/builder/?importpath=modernc.org%2fz
+//	https://modern-c.appspot.com/-/builder/?importpath=modernc.org%2fz
 package z // import "modernc.org/z"
 
 import (
