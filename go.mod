@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	modernc.org/ccgo/v3 v3.16.13
-	modernc.org/libc v1.22.4
+	modernc.org/libc v1.22.5
 )
 
 require (
