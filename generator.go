@@ -39,6 +39,7 @@ var (
 		{"linux", "amd64"}:   {},
 		{"linux", "arm"}:     {},
 		{"linux", "arm64"}:   {},
+		{"linux", "loong64"}: {},
 		{"linux", "riscv64"}: {},
 		{"linux", "ppc64le"}: {},
 		{"linux", "s390x"}:   {},

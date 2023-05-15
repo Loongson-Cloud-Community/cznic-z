@@ -40,6 +40,7 @@ build_all_targets:
 	GOOS=linux GOARCH=amd64 go build -v
 	GOOS=linux GOARCH=arm go build -v
 	GOOS=linux GOARCH=arm64 go build -v
+	GOOS=linux GOARCH=loong64 go build -v
 	GOOS=linux GOARCH=ppc64le go build -v
 	GOOS=linux GOARCH=riscv64 go build -v
 	GOOS=linux GOARCH=s390x go build -v
@@ -110,6 +111,12 @@ linux_arm:
 linux_arm64:
 	CCGO_CPP=aarch64-linux-gnu-cpp GO_GENERATE_CC=aarch64-linux-gnu-gcc TARGET_GOOS=linux TARGET_GOARCH=arm64 make generate
 	GOOS=linux GOARCH=arm64 go test -v
+
+# only on linux/loong64
+linux_loong64:
+	@echo "Should be executed only on linux/loong64."
+	make generate
+	go test -v
 
 # only on linux/riscv64
 linux_riscv64:
