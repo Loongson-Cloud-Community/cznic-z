@@ -82,7 +82,7 @@ func main() {
 		if s := cc.LongDouble64Flag(goos, goarch); s != "" {
 			cflags = fmt.Sprintf("CFLAGS=%s", s)
 		}
-		util.MustShell(true, "sh", "-c", "go mod init example.com/zlib ; go get modernc.org/libc/v2@v2.0.0-20230828211956-085ca768d9db")
+		util.MustShell(true, "sh", "-c", "go mod init example.com/zlib ; go get modernc.org/libc/v2@master")
 		if dev {
 			util.MustShell(true, "sh", "-c", "go work init ; go work use $GOPATH/src/modernc.org/libc/v2")
 		}
@@ -147,10 +147,12 @@ func main() {
 
 		return nil
 	})
-	fn := fmt.Sprintf("ccgo_%s_%s.go", goos, goarch)
-	util.MustShell(true, "cp", filepath.Join(libRoot, result), fn)
-	fn = fmt.Sprintf("example_%s_%s.c.go", goos, goarch)
-	util.MustShell(true, "cp", filepath.Join(libRoot, "example.c.go"), fn)
+	util.MustCopyFile(false, fmt.Sprintf("ccgo_%s_%s.go", goos, goarch), filepath.Join(libRoot, result), nil)
+	util.MustCopyFile(false, filepath.Join("include", goos, goarch, "zconf.h"), filepath.Join(libRoot, "zconf.h"), nil)
+	util.MustCopyFile(false, filepath.Join("include", goos, goarch, "zlib.h"), filepath.Join(libRoot, "zlib.h"), nil)
+
+	fn := fmt.Sprintf("example_%s_%s.go", goos, goarch)
+	util.MustShell(true, "cp", filepath.Join(libRoot, "example.o.go"), fn)
 
 	defer os.Remove(fn)
 
@@ -170,7 +172,7 @@ func main() {
 	}
 
 	fn = fmt.Sprintf("minigzip_%s_%s.c.go", goos, goarch)
-	util.MustShell(true, "cp", filepath.Join(libRoot, "minigzip.c.go"), fn)
+	util.MustShell(true, "cp", filepath.Join(libRoot, "minigzip.o.go"), fn)
 
 	defer os.Remove(fn)
 
