@@ -24,6 +24,7 @@ const TESTFILE = "foo.gz"
 const ZLIB_VERNUM = 4864
 const ZLIB_VERSION = "1.3"
 const Z_BEST_COMPRESSION = 9
+const Z_BEST_SPEED = 1
 const Z_DEFAULT_STRATEGY = 0
 const Z_FILTERED = 1
 const Z_FINISH = 4
@@ -604,7 +605,7 @@ func test_large_deflate(tls *libc.TLS, compr uintptr, comprLen uint64, uncompr u
 	(*(*z_stream)(unsafe.Pointer(bp))).zalloc = zalloc
 	(*(*z_stream)(unsafe.Pointer(bp))).zfree = zfree
 	(*(*z_stream)(unsafe.Pointer(bp))).opaque = libc.UintptrFromInt32(0)
-	err = z.XdeflateInit_(tls, bp, int32(1), ts+339, libc.Int32FromInt64(112))
+	err = z.XdeflateInit_(tls, bp, int32(Z_BEST_SPEED), ts+339, libc.Int32FromInt64(112))
 	if err != Z_OK {
 		libc.Xfprintf(tls, libc.Xstderr, ts, libc.VaList(bp+120, ts+343, err))
 		libc.Xexit(tls, int32(1))
@@ -811,7 +812,7 @@ func test_dict_deflate(tls *libc.TLS, compr uintptr, comprLen uint64) {
 	(*(*z_stream)(unsafe.Pointer(bp))).zalloc = zalloc
 	(*(*z_stream)(unsafe.Pointer(bp))).zfree = zfree
 	(*(*z_stream)(unsafe.Pointer(bp))).opaque = libc.UintptrFromInt32(0)
-	err = z.XdeflateInit_(tls, bp, int32(9), ts+339, libc.Int32FromInt64(112))
+	err = z.XdeflateInit_(tls, bp, int32(Z_BEST_COMPRESSION), ts+339, libc.Int32FromInt64(112))
 	if err != Z_OK {
 		libc.Xfprintf(tls, libc.Xstderr, ts, libc.VaList(bp+120, ts+343, err))
 		libc.Xexit(tls, int32(1))
